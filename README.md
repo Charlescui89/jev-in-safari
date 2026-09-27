@@ -1,9 +1,17 @@
 # JEV in Safari
 
-A custom Safari adapter for Jev Ultrafast. Jev chooses an operation and observed target;
+[![Offline checks](https://github.com/Charlescui89/jev-in-safari/actions/workflows/ci.yml/badge.svg)](https://github.com/Charlescui89/jev-in-safari/actions/workflows/ci.yml)
+
+**An experimental, open-source Safari adapter for Jev Ultrafast.**
+Use natural-language goals to drive an isolated Safari automation window on macOS.
+Jev chooses an operation and observed target;
 the configured text model writes field values; Safari WebDriver performs the input.
 
-## First milestone
+**Status: alpha preparation.** Offline tests pass; native Safari and model-driven Safari validation
+are still pending local remote-automation authorization. A green CI badge covers offline checks only.
+See [validation results](VALIDATION.md) before trying it. No Safari speed benchmark is available.
+
+## What is implemented
 
 - Native Safari WebDriver session lifecycle, independent of Chrome and Browser Harness.
 - Indexed DOM observations with document, field, and target freshness checks.
@@ -11,27 +19,48 @@ the configured text model writes field values; Safari WebDriver performs the inp
 - No automatic retry after input may have occurred.
 - Bounded model/action budgets, offline tests, local browser checks, and a live smoke test.
 
-This is an initial prototype. See VALIDATION.md for checks actually completed on this machine.
+Built for macOS developers exploring Jev on Safari. Adapted from
+[Jev Ultrafast](https://github.com/browser-use/jev-ultrafast); this is an independent community project.
 
-## Setup
+## Quick start — no API keys needed
 
-Requires macOS, Safari with `/usr/bin/safaridriver`, and Python 3.12 or newer.
+Requires macOS, Safari with `/usr/bin/safaridriver`, Python 3.12 or newer, Git, and
+[uv](https://docs.astral.sh/uv/getting-started/installation/).
 Enable Safari's **Allow remote automation** setting in its Developer settings.
 If Developer settings are hidden, enable **Show features for web developers** under Advanced.
-Safari may require a one-time `safaridriver --enable` authorization.
+Complete any Mac authentication prompt locally. See
+[Apple's WebDriver setup guide](https://developer.apple.com/documentation/safari-developer-tools/macos-enabling-webdriver).
 
-Install the project and run the local checks:
+Clone, install, and test the browser adapter on a disposable local page:
 
 ```sh
+git clone https://github.com/Charlescui89/jev-in-safari.git
+cd jev-in-safari
 uv sync --locked
 .venv/bin/jev-safari doctor
 .venv/bin/jev-safari smoke
 ```
 
-Alternatively, create a virtual environment and install the project with
-`python -m pip install -e .`.
+`doctor` should report `browser_ready: true`. Missing credential flags are expected at this stage.
+`smoke` should report `verified: true` after checking the field, dropdown, checkbox, and exactly one Save.
+These commands make no model calls. This is the expected result, not a claim of completed Safari validation.
+
+Without uv, run `python3 -m venv .venv` and `.venv/bin/python -m pip install -e .` after cloning.
+
+### If setup fails
+
+- **Session not created:** enable remote automation, complete local authentication, and close other
+  WebDriver sessions. Retry `doctor`.
+- **Missing configuration:** browser-only `smoke` needs no keys; live commands need the two keys below.
+- **Input outcome uncertain:** inspect the result before starting another run; an input may already have occurred.
+- **Other failures:** [file a bug report](https://github.com/Charlescui89/jev-in-safari/issues/new/choose)
+  with macOS/Safari/Python versions and sanitized output.
 
 ## Credentials and live use
+
+You need a [TypeSafe](https://docs.typesafe.ai/introduction) API key for Jev and a key for
+the configured text model provider. The example configuration uses DeepSeek.
+Model calls require provider service access and may incur charges.
 
 Supply an existing local dotenv file with `--env-file`, or copy `.env.example` to `.env`
 and fill the keys locally. `.env` is ignored by Git. Never paste real keys into a chat.
@@ -81,3 +110,11 @@ uv build
 `cli.py` provides diagnostics, smoke tests, and the command line.
 
 See UPSTREAM.md and LICENSE for attribution.
+
+## Help test the alpha
+
+Start with `doctor` and browser-only `smoke`, then try `smoke --live` if you have provider access.
+Report your versions, the command, and whether the verified result passed using the
+[tester report template](https://github.com/Charlescui89/jev-in-safari/issues/new/choose).
+Do not include `.env` files, credentials, or private page content.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development and feedback guidelines.

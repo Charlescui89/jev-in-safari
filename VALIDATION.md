@@ -7,9 +7,17 @@
 - `python -m pytest -q`: **30 passed**. Includes reused Jev policy tests and new Safari adapter contracts.
 - `ruff check .`: passed.
 - `node --check src/jev_safari/snapshot.js`: passed.
-- Built source and wheel distributions for `jev-safari 0.1.0`.
+- Repeated offline tests, lint, JavaScript syntax validation, and package build after alpha launch preparation.
+- Built source and wheel distributions for `jev-safari 0.1.0a1`.
 - Verified the wheel contains the DOM snapshot and CLI, without dotenv credentials or Browser Harness.
 - Confirmed installed Safari WebDriver version: Safari 26.6.2 (21624.5.1.11.3).
+
+## Automated checks
+
+[Offline CI](https://github.com/Charlescui89/jev-in-safari/actions/workflows/ci.yml) runs tests,
+lint, JavaScript syntax validation, and package builds on Linux with Python 3.12/3.14 and macOS
+with Python 3.14. Consult the workflow run for the commit being used. CI does not start Safari
+or call model APIs; a green badge does not verify browser behavior.
 
 ## Live Safari tests pending
 

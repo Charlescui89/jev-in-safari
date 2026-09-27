@@ -1,9 +1,13 @@
 [project]
 name = "jev-safari"
-version = "0.1.0"
+version = "0.1.0a1"
 description = "Jev in Safari: a native Safari WebDriver adapter for Jev Ultrafast"
 requires-python = ">=3.12"
 dependencies = ["httpx[http2]>=0.28,<1", "python-dotenv>=1,<2"]
+
+[project.urls]
+Repository = "https://github.com/Charlescui89/jev-in-safari"
+Issues = "https://github.com/Charlescui89/jev-in-safari/issues"
 
 [project.scripts]
 jev-safari = "jev_safari.cli:main"
